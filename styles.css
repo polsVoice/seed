@@ -1,0 +1,77 @@
+body
+{
+	font-family: Helvetica, Arial, sans-serif;
+	background-color: #13DA87;
+}
+
+form
+{
+	position: absolute;
+	width: 100%;
+	top: 30%;
+}
+
+#tabs
+{
+	font-family: Helvetica, Arial, sans-serif;
+	width: 53%;
+	height: 70%;
+	position: absolute;
+	left: 18%;
+	border: 1px solid black;
+    display: inline-block;
+}
+
+#task
+{
+	background-color: cyan;
+	width: 40%;
+	height: 10%;
+	left: 20%;
+	position: relative;
+	border: 1px solid black;
+	border-radius: 10px;
+	padding: 0 2%;
+}
+
+#controls
+{
+	border: 1px solid black;
+	border-radius: 10px;
+	position: absolute;
+	width: 85%;
+	padding: 2%;
+}
+
+button
+{
+	padding: 1%;
+}
+
+input[type=checkbox]
+{
+	width: 20px;
+	height: 20px;
+}
+
+#runner
+{
+	margin-left: 5%;
+	padding: 1em;
+}
+
+#timerArrow
+{
+	margin-left: 2%;
+}
+
+.overdue
+{
+	color: red;
+	font-weight: bold;
+}
+
+.upcoming
+{
+	background-color: #f54b5f;
+}

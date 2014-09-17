@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link href="styles.css" rel="stylesheet" />
+		<link href="jquery-ui-1.11.0.custom/jquery-ui.structure.min.css" rel="stylesheet" />
+		<link href="jquery-ui-1.11.0.custom/jquery-ui.theme.min.css" rel="stylesheet" />
+		<title>.seed.</title>
+	</head>
+	<body>
+		<img src="img/logo.png" alt=".seed. logo" />
+		<p id="reminder">
+		</p>
+		<div id="taskContainer">
+		</div>
+		<div id="tabs">
+			<ul>
+				<li><a href="#tab01">Add Task</a>
+				</li>
+				<li><a href="#tab02">Projects</a>
+				</li>
+				<li><a href="#tab03">Completed</a>
+				</li>
+				<li><a href="#tab04">About</a>
+				</li>
+			</ul>
+			<div id="tab01">		
+				<form>
+					<div id="controls">
+						<input type="text" id="input" />
+						<button type="button" id="submit">Submit</button>
+						<button type="button" id="clear">Clear</button>
+						<button type="button" id="back">&lt;&lt;</button>
+						<button type="button" id="forward">&gt;&gt;</button>
+						<button type="button" id="random">Random</button>
+					</div>
+				</form>
+			</div>
+			<div id="tab02">				
+				<form>
+					<div id="addProject">
+						<input type="text" id="projInput" />
+						<button type="button" id="projButton">Add Project</button>
+					</div>
+				</form>
+			</div>
+			<div id="tab03">
+			</div>
+			<div id="tab04">
+				<p>.seed. is a task manager. The philosophy behind it is that it is much easier to focus on one task at a time than to look at one huge list of tasks.
+				</p>
+				<p>You can enter tasks by pressing "Submit" or hitting the Enter key after typing in your task description. You can navigate tasks with the arrow buttons in the control panel or the arrow keys on your keyboard.
+				</p>
+			</div>
+		</div>
+		<div id="seedInfo">
+			<p>Seed uses:
+			</p>
+			<ul>
+				<li><a href="http://jquery.com/">jQuery</a></li>
+				<li><a href="http://jqueryui.com/">jQuery UI</a></li>
+				<li><a href="http://dev.yathit.com/">YDN-DB</a></li>
+				<li><a href="https://github.com/jylauril/jquery-runner">jQuery Runner</a></li>
+				<li><a href="http://www.datejs.com/">Date.js</a></li>
+			</ul>
+		</div>
+		<script src="jquery-1.11.1.min.js"></script>
+		<script src="jquery-ui-1.11.0.custom/jquery-ui.min.js"></script>
+		<script src="require.js"></script>
+		<script src="ydn.db-iswu-core-e-qry-dev.js"></script>
+		<script src="jquery.runner-min.js"></script>
+		<script src="toggle.js"></script>
+		<script src="date.js"></script>
+		<script src="seed.js"></script>
+	</body>
+</html>
