@@ -37,13 +37,14 @@
 } )();
 
 window.onload = function(){
-	var result = null;
+	var result = null,
+        today = "2014-10-11";
 	test( "Async Test #1: testing getISODate", function(){
 		pause();
 		var date = null;
 		setTimeout( function(){
 			date = seed.getISODate();
-			result = date === "2014-09-17" ? true : false;
+			result = date === today ? true : false;
 			assert( result, "First test completed" );
 			console.log( date );
 			resume();
@@ -64,5 +65,22 @@ window.onload = function(){
         num = seed.random( testArr );
         result = ( num <= testArr.length-1 && num >= 0 ) ? true : false;
         assert( result, "Third test completed" );
+    } );
+    test( "Testing input()", function(){
+        var testTask = null,
+            testProj = null;
+        
+        $( "body" ).append( "<input type='text' id='input' />" );
+        $( "#input" ).hide();
+        $( "#input" ).val( "foo" );
+        testTask = seed.input();
+        console.log( testTask );
+        assert( testTask.taskId, "Object has taskId" );
+        assert( testTask.task === "foo", "Object has task" );
+        assert( testTask.createdDate === today, "Object has created date" );
+        assert( testTask.duration === "00:00:00", "Object has duration" );
+        assert( testTask.dueDate === "0000-00-00", "Object has dueDate" );
+        assert( testTask.deadline === "false", "Object has deadline" );
+        assert( testTask.projId === null, "Object has null projId" );
     } );
 };

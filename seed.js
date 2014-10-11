@@ -84,8 +84,6 @@ var seed = {
             $( "#projMenu option" ).each( function(){
                console.log( $( "projMenu" ).val() ); 
             } );
-            //~ seed.db.from( "active", "=", seed.array[ seed.ctr ].taskId ).patch( {projId: $( "#projMenu" ).val()} );
-            //~ 
         } );
 		
 		// Keyboard navigation: left arrow is back, right arrow is forward
@@ -103,60 +101,87 @@ var seed = {
 			var project = $( "#projInput" ).val();
 		} );
 	},
-	input: function(){
-		'use strict';
-		console.log( "Input" );
-		var task = $( "#input" ).val(), 
-			project = $( "#projInput" ).val(),
-			req = null,
-			newTask = {},
-			newProject = {};
-		
-		if ( task ){
-			newTask = {
-				taskId: new Date().getTime(),
-				task: task,
-				createdDate: seed.getISODate(),
-				duration: "00:00:00",
-				dueDate: "0000-00-00",
-				deadline: "false",
-				projId: null
-			};
-			
-			var req = seed.db.put( {name: "active"}, newTask );
-			req.done( function( key ){
-				console.log( key );
-			} );
-			req.fail( function( e ){
-				throw e;
-			} );
-			
-			$( "#input" ).val( "" );
-			seed.array.push( newTask );
-			
-			$( "#input" ).focus();
-			
-			seed.ctr = seed.array.length-1;
-			console.log( "seed.ctr is " + seed.ctr );
-			seed.taskDiv();
-		}
-		else if ( project ){
-			console.log( "Project!" );
-			newProject = {
-				projId: new Date().getTime(),
-				projName: project
-			};
-			var req = seed.db.put( {name: "projects"}, newProject );
-			req.done( function( key ){
-				console.log( key );
-			} );
-			req.fail( function( e ){
-				throw e;
-			} );
-			$( "#projInput" ).val( "" );
-			$( "#projInput" ).focus();
-		}
-	},
+    input: function(){
+        "use strict";
+        var task = $( "#input" ).val(),
+            project = $( "#projInput" ).val(),
+            newTask = {},
+            newProject = {};
+            if ( task ){
+                console.log( task );
+                newTask = {
+                    taskId: new Date().getTime(),
+                    task: task,
+                    createdDate: seed.getISODate(),
+                    duration: "00:00:00",
+                    dueDate: "0000-00-00",
+                    deadline: "false",
+                    projId: null
+                };
+                return newTask;
+            }
+            else if ( project ){
+                newProject = {
+                    projId: new Date().getTime(),
+                    projName: project
+                };
+                return project;
+            }
+    },
+	//~ input: function(){
+		//~ 'use strict';
+		//~ console.log( "Input" );
+		//~ var task = $( "#input" ).val(), 
+			//~ project = $( "#projInput" ).val(),
+			//~ req = null,
+			//~ newTask = {},
+			//~ newProject = {};
+		//~ 
+		//~ if ( task ){
+			//~ newTask = {
+				//~ taskId: new Date().getTime(),
+				//~ task: task,
+				//~ createdDate: seed.getISODate(),
+				//~ duration: "00:00:00",
+				//~ dueDate: "0000-00-00",
+				//~ deadline: "false",
+				//~ projId: null
+			//~ };
+			//~ 
+			//~ var req = seed.db.put( {name: "active"}, newTask );
+			//~ req.done( function( key ){
+				//~ console.log( key );
+			//~ } );
+			//~ req.fail( function( e ){
+				//~ throw e;
+			//~ } );
+			//~ 
+			//~ $( "#input" ).val( "" );
+			//~ seed.array.push( newTask );
+			//~ 
+			//~ $( "#input" ).focus();
+			//~ 
+			//~ seed.ctr = seed.array.length-1;
+			//~ console.log( "seed.ctr is " + seed.ctr );
+			//~ seed.taskDiv();
+		//~ }
+		//~ else if ( project ){
+			//~ console.log( "Project!" );
+			//~ newProject = {
+				//~ projId: new Date().getTime(),
+				//~ projName: project
+			//~ };
+			//~ var req = seed.db.put( {name: "projects"}, newProject );
+			//~ req.done( function( key ){
+				//~ console.log( key );
+			//~ } );
+			//~ req.fail( function( e ){
+				//~ throw e;
+			//~ } );
+			//~ $( "#projInput" ).val( "" );
+			//~ $( "#projInput" ).focus();
+		//~ }
+	//~ },
 	deleteEntry: function( id ){
 		"use strict";
 		var taskId = parseInt( id, 10 );
