@@ -108,7 +108,6 @@ var seed = {
             newTask = {},
             newProject = {};
             if ( task ){
-                console.log( task );
                 newTask = {
                     taskId: new Date().getTime(),
                     task: task,
@@ -125,7 +124,7 @@ var seed = {
                     projId: new Date().getTime(),
                     projName: project
                 };
-                return project;
+                return newProject;
             }
     },
 	//~ input: function(){
@@ -182,6 +181,15 @@ var seed = {
 			//~ $( "#projInput" ).focus();
 		//~ }
 	//~ },
+    insertData: function( dataObj ){
+        "use strict";
+        if ( dataObj.hasOwnProperty( "task" ) ){
+            seed.db.put( {name: "active"}, dataObj );
+        }
+        else if ( dataObj.hasOwnProperty( "projName" ) ){
+            seed.db.put( {name: "projects"}, dataObj );
+        }
+    },
 	deleteEntry: function( id ){
 		"use strict";
 		var taskId = parseInt( id, 10 );
@@ -204,7 +212,7 @@ var seed = {
 		
 		// bubble sort adapted from 
 		// http://www.contentedcoder.com/2012/09/bubble-sort-algorithm-in-javascript.html
-		var len = array.length-1, isSwap = true, comparisons = 0, swaps = 0;
+		var len = array.length-1, isSwap = true;
 		for( var i = 0; i < len; i++ ){
 			isSwap = false;
 			for ( var j = 0, swap = null, lastIndex = len - i; j < lastIndex; j++ ){
@@ -212,7 +220,6 @@ var seed = {
 				var nextObjDate = Date.parse( array[ j+1 ].dueDate );
 				
 				if ( ( curObjDate === null || curObjDate > nextObjDate ) && nextObjDate !== null ){
-					swaps++;
 					swap = array[ j ];
 					array[ j ] = array[ j+1 ];
 					array[ j+1 ] = swap;

@@ -74,7 +74,6 @@ window.onload = function(){
         $( "#input" ).hide();
         $( "#input" ).val( "foo" );
         testTask = seed.input();
-        console.log( testTask );
         assert( testTask.taskId, "Object has taskId" );
         assert( testTask.task === "foo", "Object has task" );
         assert( testTask.createdDate === today, "Object has created date" );
@@ -82,5 +81,31 @@ window.onload = function(){
         assert( testTask.dueDate === "0000-00-00", "Object has dueDate" );
         assert( testTask.deadline === "false", "Object has deadline" );
         assert( testTask.projId === null, "Object has null projId" );
+        $( "#input" ).remove();
+        
+        $( "body" ).append( "<input type='text' id='projInput' />" );
+        $( "#projInput" ).hide();
+        $( "#projInput" ).val( "bar" );
+        testProj = seed.input();
+        assert( testProj.projId, "Project has projId" );
+        assert( testProj.projName === "bar", "Project has projName" );
+    } );
+    test( "Testing insertData()", function(){
+        var key = new Date().getTime();
+        var taskObj = {
+            taskId: key,
+            task: "foo",
+            createdDate: today,
+            duration: "00:00:00",
+            dueDate: "0000-00-00",
+            deadline: "false",
+            projId: null
+       };
+       seed.insertData( taskObj );
+       // if object can be found in db, result is true; otherwise, it's false
+       result = seed.db.get( "active", key ) ? true : false;  
+       assert( result, "The object was found in the database" );
+       
+       seed.db.clear();
     } );
 };
