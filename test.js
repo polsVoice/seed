@@ -38,7 +38,7 @@
 
 window.onload = function(){
 	var result = null,
-        today = "2014-10-11";
+        today = "2014-10-16";
 	test( "Async Test #1: testing getISODate", function(){
 		pause();
 		var date = null;
@@ -71,7 +71,6 @@ window.onload = function(){
             testProj = null;
         
         $( "body" ).append( "<input type='text' id='input' />" );
-        $( "#input" ).hide();
         $( "#input" ).val( "foo" );
         testTask = seed.input();
         assert( testTask.taskId, "Object has taskId" );
@@ -91,9 +90,9 @@ window.onload = function(){
         assert( testProj.projName === "bar", "Project has projName" );
     } );
     test( "Testing insertData()", function(){
-        var key = new Date().getTime();
+        var id = new Date().getTime();
         var taskObj = {
-            taskId: key,
+            taskId: id,
             task: "foo",
             createdDate: today,
             duration: "00:00:00",
@@ -102,10 +101,33 @@ window.onload = function(){
             projId: null
        };
        seed.insertData( taskObj );
+       
        // if object can be found in db, result is true; otherwise, it's false
-       result = seed.db.get( "active", key ) ? true : false;  
-       assert( result, "The object was found in the database" );
+       seed.db.get( "active", id ).done( function( value ){
+           result = value.taskId === id ? true : false;
+       } );
+       assert( result, "The task object was found in the database" );
+       
+       id = new Date().getTime();
+       var projObj = {
+           projId: id,
+           projName: "foo"
+       };
+       seed.insertData( projObj );
+       
+       seed.db.get( "projects", id ).done( function( value ){
+           result = value.projId === id ? true : false;
+       } );
+       assert( result, "The project object was found in the database" );
        
        seed.db.clear();
+    } );
+    test( "Testing clearField()", function(){
+        $( "body" ).append( "<input type='text' id='input' />" );
+        $( "#input" ).val( "foo" );
+        seed.clearField( "#input" );
+        assert( $( "#input" ).val() === "" && $( "#input" ).is( ":focus" ),
+            "The input field has no value and is focused" );
+        $( "#input" ).remove();
     } );
 };

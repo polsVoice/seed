@@ -127,6 +127,10 @@ var seed = {
                 return newProject;
             }
     },
+    clearField: function( field ){
+        $( field ).val( "" );
+        $( field ).focus();
+    },
 	//~ input: function(){
 		//~ 'use strict';
 		//~ console.log( "Input" );
