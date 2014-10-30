@@ -38,7 +38,7 @@
 
 window.onload = function(){
 	var result = null,
-        today = "2014-10-16";
+        today = "2014-10-30";
 	test( "Async Test #1: testing getISODate", function(){
 		pause();
 		var date = null;
@@ -100,25 +100,29 @@ window.onload = function(){
             deadline: "false",
             projId: null
        };
-       seed.insertData( taskObj );
+       seed.insertData( taskObj, seed.db );
        
        // if object can be found in db, result is true; otherwise, it's false
        seed.db.get( "active", id ).done( function( value ){
            result = value.taskId === id ? true : false;
        } );
        assert( result, "The task object was found in the database" );
+       assert( seed.array.pop() === taskObj,
+            "The task object was successfully inserted into the seed array" );
        
        id = new Date().getTime();
        var projObj = {
            projId: id,
            projName: "foo"
        };
-       seed.insertData( projObj );
+       seed.insertData( projObj, seed.db );
        
        seed.db.get( "projects", id ).done( function( value ){
            result = value.projId === id ? true : false;
        } );
        assert( result, "The project object was found in the database" );
+       assert( seed.projects.pop() === projObj,
+        "The project object was successfully inserted into the projects array" );
        
        seed.db.clear();
     } );

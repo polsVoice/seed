@@ -18,7 +18,7 @@ var seed = {
 		} ]
 	},
 	db: null,
-	array: [],		// array for active tasks
+	tasks: [],		// array for active tasks
 	completed: [],	// array for completed tasks
 	projects: [],   // array for projects
     projMenu: null,
@@ -52,27 +52,26 @@ var seed = {
             }
         } );
         
-        seed.readStorage( "active", seed.array, function( array ){
+        seed.readStorage( "active", seed.tasks, function( array ){
 			seed.dueDateSort( array );
 			seed.taskDiv();
 		} );
         
-		$( "#submit, #projButton" ).click( seed.input );
-
-		$( "#input, #projInput" ).keypress( function( e ){
-			// Enter key saves task
-			if ( e.which === 13 ){
-				seed.input();
-				// to prevent page reload from Enter key in text field
-				return false;
-			}
-		} );
+        $( "#submit, #projButton" ).click( seed.inputHandler );
+        $( "#input, #projInput" ).keypress( function( e ){
+            // was Enter key pressed?
+            if ( e.which === 13 ){
+                seed.inputHandler();
+                // to prevent page reload from Enter key in text field
+                return false;
+            }
+        } );
 		$( "#clear" ).click( seed.clear );
 		$( "#back, #forward" ).click( seed.navigate );
 		
 		// random task
 		$( "#random" ).click( function(){
-			seed.ctr = seed.random( seed.array );
+			seed.ctr = seed.random( seed.tasks );
 			seed.taskDiv();
 		} );
         
@@ -102,6 +101,7 @@ var seed = {
 		} );
 	},
     input: function(){
+        // returns task or project object
         "use strict";
         var task = $( "#input" ).val(),
             project = $( "#projInput" ).val(),
@@ -127,9 +127,19 @@ var seed = {
                 return newProject;
             }
     },
-    clearField: function( field ){
-        $( field ).val( "" );
-        $( field ).focus();
+    clearField: function( elem ){
+        // clears input from field and returns focus to the field
+        $( "input[class=formInput]" ).val( "" );
+        $( "input[class=formInput]:visible" ).focus();
+    },
+    inputHandler: function(){
+        var obj = seed.input();
+        seed.insertData( obj, seed.db );
+        seed.clearField();
+        if ( obj.task ){
+            seed.ctr = seed.tasks.length-1;
+            seed.taskDiv();
+        }
     },
 	//~ input: function(){
 		//~ 'use strict';
@@ -160,11 +170,11 @@ var seed = {
 			//~ } );
 			//~ 
 			//~ $( "#input" ).val( "" );
-			//~ seed.array.push( newTask );
+			//~ seed.tasks.push( newTask );
 			//~ 
 			//~ $( "#input" ).focus();
 			//~ 
-			//~ seed.ctr = seed.array.length-1;
+			//~ seed.ctr = seed.tasks.length-1;
 			//~ console.log( "seed.ctr is " + seed.ctr );
 			//~ seed.taskDiv();
 		//~ }
@@ -185,13 +195,15 @@ var seed = {
 			//~ $( "#projInput" ).focus();
 		//~ }
 	//~ },
-    insertData: function( dataObj ){
+    insertData: function( dataObj, db ){
         "use strict";
         if ( dataObj.hasOwnProperty( "task" ) ){
-            seed.db.put( {name: "active"}, dataObj );
+            db.put( {name: "active"}, dataObj );
+            seed.tasks.push( dataObj );
         }
         else if ( dataObj.hasOwnProperty( "projName" ) ){
-            seed.db.put( {name: "projects"}, dataObj );
+            db.put( {name: "projects"}, dataObj );
+            seed.projects.push( dataObj );
         }
     },
 	deleteEntry: function( id ){
@@ -242,7 +254,7 @@ var seed = {
 		var btnId = this.id;
 		
 		if ( $( "#delete" ).is( ":checked" ) ){
-			var req = seed.db.put( { name: "completed" }, seed.array[ seed.ctr ] );
+			var req = seed.db.put( { name: "completed" }, seed.tasks[ seed.ctr ] );
 			req.done( function( key ){
 				console.log( key );
 			} );
@@ -250,10 +262,10 @@ var seed = {
 				throw e;
 			} );
 			
-			seed.deleteEntry( seed.array[ seed.ctr ].taskId );
+			seed.deleteEntry( seed.tasks[ seed.ctr ].taskId );
 			
 			// array moves down
-			seed.array.splice( seed.ctr, 1 );
+			seed.tasks.splice( seed.ctr, 1 );
 			
 			// back button or left arrow key
 			if ( btnId === "back" || $( "body" ).data( "source" ) === 37 ){
@@ -278,11 +290,11 @@ var seed = {
 			}
 		}
 		
-		if ( seed.ctr >= seed.array.length ){
+		if ( seed.ctr >= seed.tasks.length ){
 			seed.ctr = 0;
 		}
 		if ( seed.ctr < 0 ){
-			seed.ctr = seed.array.length-1;
+			seed.ctr = seed.tasks.length-1;
 		}
 
 		seed.taskDiv();
@@ -310,20 +322,20 @@ var seed = {
 	},
 	taskDisplay: function(){
 		'use strict';
-		if( seed.array.length ){
-			$( "#task" ).append( "<p><input type='checkbox' name='task' id='delete' value='' /><label for='delete'>" + seed.array[ seed.ctr ].task + "</label></p><p id='breakMsg'></p><img src='img/arrow-right.png' id='timerArrow' alt='arrow' /><span id='runner'>" + seed.array[ seed.ctr ].duration + "</span><p>Due: <input type='text' id='datepicker' /></p><p>Created on: " + seed.array[ seed.ctr ].createdDate + "</p>" );
+		if( seed.tasks.length ){
+			$( "#task" ).append( "<p><input type='checkbox' name='task' id='delete' value='' /><label for='delete'>" + seed.tasks[ seed.ctr ].task + "</label></p><p id='breakMsg'></p><img src='img/arrow-right.png' id='timerArrow' alt='arrow' /><span id='runner'>" + seed.tasks[ seed.ctr ].duration + "</span><p>Due: <input type='text' id='datepicker' /></p><p>Created on: " + seed.tasks[ seed.ctr ].createdDate + "</p>" );
             
             if ( seed.projMenu !== null ){
                 $( "#task" ).append( seed.projMenu );
             }
 			
-			$( "#datepicker" ).val( seed.array[ seed.ctr ].dueDate );
+			$( "#datepicker" ).val( seed.tasks[ seed.ctr ].dueDate );
 			
-			console.log( "deadline is " + seed.array[ seed.ctr ].deadline );
+			console.log( "deadline is " + seed.tasks[ seed.ctr ].deadline );
 			
-			var numDaysLeft = ( Date.parse( seed.array[ seed.ctr ].dueDate ) - Date.parse( seed.getISODate() ) ) / 86400000;
+			var numDaysLeft = ( Date.parse( seed.tasks[ seed.ctr ].dueDate ) - Date.parse( seed.getISODate() ) ) / 86400000;
 			
-			if( numDaysLeft <= 3 && seed.array[ seed.ctr ].deadline === "true" ){
+			if( numDaysLeft <= 3 && seed.tasks[ seed.ctr ].deadline === "true" ){
 				$( "#reminder" ).html( "One or more tasks are due in 2 days or less!" );
 				$( "#datepicker" ).addClass( "upcoming" );
 				$( "#task p" ).addClass( "overdue" );
@@ -331,7 +343,7 @@ var seed = {
 
 			// icon from http://openiconlibrary.sourceforge.net/
 			// under CC-by-SA http://creativecommons.org/licenses/by-sa/3.0/
-			var duration = seed.array[ seed.ctr ].duration;
+			var duration = seed.tasks[ seed.ctr ].duration;
 			var start = seed.stringToMilliseconds( duration );
 			var stop = 356400000 + 3540000 + 59000; // 99 hours, 59 mins, 59 secs
 			
@@ -399,14 +411,14 @@ var seed = {
 				dateFormat: "yy-mm-dd",
 				gotoCurrent: "true",
 				onSelect: function(){
-					var index = seed.array[ seed.ctr ].taskNum;
+					var index = seed.tasks[ seed.ctr ].taskNum;
 					
-					seed.array[ seed.ctr ].dueDate = $( "#datepicker" ).val();
+					seed.tasks[ seed.ctr ].dueDate = $( "#datepicker" ).val();
 					// update property
-					seed.db.from( "active", "=", seed.array[ seed.ctr ].taskId ).patch( {dueDate: $( "#datepicker" ).val()} );
+					seed.db.from( "active", "=", seed.tasks[ seed.ctr ].taskId ).patch( {dueDate: $( "#datepicker" ).val()} );
 					
-					seed.array[ seed.ctr ].deadline = "true";					
-					seed.db.from( "active", "=", seed.array[ seed.ctr ].taskId ).patch( {deadline: "true"} );
+					seed.tasks[ seed.ctr ].deadline = "true";					
+					seed.db.from( "active", "=", seed.tasks[ seed.ctr ].taskId ).patch( {deadline: "true"} );
 					
 					console.log( "datepicker val is " + $( "#datepicker" ).val() );
 				}
@@ -429,16 +441,16 @@ var seed = {
 		// icon from http://openiconlibrary.sourceforge.net/
 		// under CC-by-SA http://creativecommons.org/licenses/by-sa/3.0/
 		
-		if( seed.array.length ){
-			seed.array[ seed.ctr ].duration = $( "#runner" ).html();
+		if( seed.tasks.length ){
+			seed.tasks[ seed.ctr ].duration = $( "#runner" ).html();
             // update time in database
-			seed.db.from( "active", "=", seed.array[ seed.ctr ].taskId ).patch( {duration: $( "#runner" ).html()} );
+			seed.db.from( "active", "=", seed.tasks[ seed.ctr ].taskId ).patch( {duration: $( "#runner" ).html()} );
 		}
 	},
 	clear: function(){
 		'use strict';
-		while ( seed.array.length > 0 ){
-			seed.array.pop();
+		while ( seed.tasks.length > 0 ){
+			seed.tasks.pop();
 		}
         seed.db.clear();
 		seed.ctr = 0;
