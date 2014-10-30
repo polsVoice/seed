@@ -141,60 +141,6 @@ var seed = {
             seed.taskDiv();
         }
     },
-	//~ input: function(){
-		//~ 'use strict';
-		//~ console.log( "Input" );
-		//~ var task = $( "#input" ).val(), 
-			//~ project = $( "#projInput" ).val(),
-			//~ req = null,
-			//~ newTask = {},
-			//~ newProject = {};
-		//~ 
-		//~ if ( task ){
-			//~ newTask = {
-				//~ taskId: new Date().getTime(),
-				//~ task: task,
-				//~ createdDate: seed.getISODate(),
-				//~ duration: "00:00:00",
-				//~ dueDate: "0000-00-00",
-				//~ deadline: "false",
-				//~ projId: null
-			//~ };
-			//~ 
-			//~ var req = seed.db.put( {name: "active"}, newTask );
-			//~ req.done( function( key ){
-				//~ console.log( key );
-			//~ } );
-			//~ req.fail( function( e ){
-				//~ throw e;
-			//~ } );
-			//~ 
-			//~ $( "#input" ).val( "" );
-			//~ seed.tasks.push( newTask );
-			//~ 
-			//~ $( "#input" ).focus();
-			//~ 
-			//~ seed.ctr = seed.tasks.length-1;
-			//~ console.log( "seed.ctr is " + seed.ctr );
-			//~ seed.taskDiv();
-		//~ }
-		//~ else if ( project ){
-			//~ console.log( "Project!" );
-			//~ newProject = {
-				//~ projId: new Date().getTime(),
-				//~ projName: project
-			//~ };
-			//~ var req = seed.db.put( {name: "projects"}, newProject );
-			//~ req.done( function( key ){
-				//~ console.log( key );
-			//~ } );
-			//~ req.fail( function( e ){
-				//~ throw e;
-			//~ } );
-			//~ $( "#projInput" ).val( "" );
-			//~ $( "#projInput" ).focus();
-		//~ }
-	//~ },
     insertData: function( dataObj, db ){
         "use strict";
         if ( dataObj.hasOwnProperty( "task" ) ){

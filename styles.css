@@ -64,6 +64,13 @@ input[type=checkbox]
 {
 	margin-left: 2%;
 }
+.formInput
+{
+    width: 50%;
+    display: block;
+    margin: .5em;
+    border-radius: 1px;
+}
 
 .overdue
 {
